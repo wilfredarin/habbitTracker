@@ -5,7 +5,7 @@ import { getHabbitByIdRepo } from "./features/habbit/habbit.repository.js";
 import { generateNDays } from "./features/habbit/habbit.controller.js";
 
 
-app.listen(5000,async ()=>{
+app.listen(process.env.PORT},async ()=>{
     await connectToDb();
     console.log("Server is running at port 3000");
     // const date = new Date();
