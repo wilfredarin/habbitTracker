@@ -1,0 +1,48 @@
+<html>
+    <head><title>Habbit Detail</title></head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+    integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" 
+    crossorigin="anonymous">
+    <body>
+
+        <a href="/" class="btn btn-primary"><h1>Habbit Tracker</h1></a>
+        <h2><%=habbit.name%></h2>
+
+        <nav aria-label="Page navigation example">
+            <ul class="pagination">
+              <li class="page-item"><a class="page-link" href="/habbits/prev/<%=habbit._id%>/<%=statusArr[statusArr.length-1].date%>">Previous</a></li>
+              <li class="page-item"><a class="page-link" href="/habbits/next/<%=habbit._id%>/<%=statusArr[0].date%>">Next</a></li>
+            </ul>
+          </nav>
+      
+        
+        <%statusArr.forEach(d=>{%>
+            <div class="card" style="width: 18rem;">
+                <div class="card-body">
+                  <h5 class="card-title"><%=d.date.toLocaleDateString('en-US',{weekday:"short"})%></h5>
+                  <p class="card-text"><%=d.date.toLocaleDateString()%></p>
+                  <button
+                        class="<%= d.state ==='Done'?'btn btn-primary' : d.state==='Not Done'?'btn btn-danger':
+                        'btn btn-secondary'%>"
+                        id="<%=d.date%><%=habbit._id%>"
+                        onclick="toggleButton('<%=d.date%>','<%=habbit._id%>')">
+                        <%=d.state%>
+                    </button>
+                </div>
+              </div>
+        <%})%>
+
+        <script>
+            async function toggleButton(date,habbit_id){
+                const resp = await fetch(`/habbits/${habbit_id}/${date}`,{
+                    method:"POST"
+                });
+                const state = await resp.json();
+                console.log(state,"check");
+                const btn = document.getElementById(`${date}${habbit_id}`);
+                btn.innerText=state;
+                btn.className= state==="Done"?'btn btn-primary':state==="Not Done"?'btn btn-danger':'btn btn-secondary'
+            }
+        </script>
+    </body>
+</html>
